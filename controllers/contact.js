@@ -1,7 +1,7 @@
 const ContactSchema = require('../models/Contact')
 
 exports.AddContact = async (req,res)=>{
-    const {name,email} = req.body;
+    const {name,email,age,pic} = req.body;
     
     try {
 
@@ -11,9 +11,10 @@ exports.AddContact = async (req,res)=>{
             return res.status(400).send('Déja mawjoud')
        }
         await newContact.save();
-        res.status(200).send('Ya3tik esa7a' + newContact);
+        res.status(200).send({msg:"added", newContact });
     } catch (error) {
-        res.status(500).send(`Ykeb sa3dek : ${error}`)
+        
+        res.status(500).send({msg:'could not add user'})
     }
 
 }
@@ -21,9 +22,9 @@ exports.AddContact = async (req,res)=>{
 exports.ShowContacts =  async (req,res)=>{
     try {
        const collectionContact =  await ContactSchema.find();
-        res.status(200).send(collectionContact);
+        res.status(200).send({msg:"list",collectionContact});
     } catch (error) {
-        res.status(500).send(`Ykeb sa3dek : ${error}`)
+        res.status(500).send({msg:"could not list"})
     }
 }
 
@@ -32,9 +33,9 @@ exports.DeleteContact = async (req,res)=>{
     const {id} = req.params
     try {
         const deletContact = await ContactSchema.findOneAndDelete({_id : id});
-        res.status(200).send(deletContact);
+        res.status(200).send({msg:'deleted'});
     } catch (error) {
-        res.status(500).send(`Ykeb sa3dek : ${error}`)
+        res.status(500).send({msg:"could not delete"})
     }
 }
 
@@ -42,9 +43,9 @@ exports.UpdateContact = async (req,res)=>{
     const {id} = req.params
     try {
         const updateContact = await ContactSchema.findByIdAndUpdate(id,{$set : {...req.body}})
-        res.status(200).send(updateContact);
+        res.status(200).send({ msg:'updated' ,updateContact});
     } catch (error) {
-        res.status(500).send(`Ykeb sa3dek : ${error}`)
+        res.status(500).send({msg:'could not update'})
     }
 }
 
@@ -52,8 +53,8 @@ exports.ShowContactByID = async (req,res)=>{
     const {id} = req.params
     try {
        const collectionContact =  await ContactSchema.findById(id);
-        res.status(200).send(collectionContact);
+        res.status(200).send({msg:'user',collectionContact});
     } catch (error) {
-        res.status(500).send(`Ykeb sa3dek : ${error}`)
+        res.status(500).send({msg:'could not add user'})
     }
 }
